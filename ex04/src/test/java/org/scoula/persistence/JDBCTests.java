@@ -1,4 +1,5 @@
 package org.scoula.persistence;
+
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -6,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import static org.junit.jupiter.api.Assertions.fail;
-@Log4j2
 
+@Log4j2
 public class JDBCTests {
     @BeforeAll
     public static void setup() {
