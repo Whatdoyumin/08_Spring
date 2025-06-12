@@ -2,13 +2,18 @@ package org.scoula.board.service;
 
 import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.scoula.board.dto.BoardDTO;
 import org.scoula.config.RootConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class BoardServiceTest {
     @Autowired
     private BoardService service;
+    @Autowired
+    private BoardService boardService;
 
     @Test
     void getList() {
@@ -55,5 +62,49 @@ class BoardServiceTest {
     void delete() {
         //  게시물 번호의 존재 여부를 확인하고 테스트를 할 것
         log.info("delete Result: " + service.delete(1L));
+    }
+
+
+    // 전체 시나리오 테스트
+    @Test
+    @DisplayName("게시판 CRUD 전체 시나리오")
+    @Transactional
+    @Rollback  // 테스트 후 롤백하여 데이터 정리
+    public void fullCrudScenario() {
+        // 1. Create - 게시글 생성
+        BoardDTO newBoard = BoardDTO.builder()
+                .title("통합테스트 제목")
+                .content("통합테스트 내용")
+                .writer("tester")
+                .build();
+
+        boardService.create(newBoard);
+        Long createdNo = newBoard.getNo();
+        assertNotNull(createdNo);
+
+        // 2. Read - 생성된 게시글 조회
+        BoardDTO foundBoard = boardService.get(createdNo);
+        assertEquals("통합테스트 제목", foundBoard.getTitle());
+        assertEquals("tester", foundBoard.getWriter());
+
+        // 3. Update - 게시글 수정
+        foundBoard.setTitle("수정된 제목");
+        foundBoard.setContent("수정된 내용");
+        boolean updateResult = boardService.update(foundBoard);
+        assertTrue(updateResult);
+
+        // 4. 수정 결과 확인
+        BoardDTO updatedBoard = boardService.get(createdNo);
+        assertEquals("수정된 제목", updatedBoard.getTitle());
+        assertEquals("수정된 내용", updatedBoard.getContent());
+
+        // 5. Delete - 게시글 삭제
+        boolean deleteResult = boardService.delete(createdNo);
+        assertTrue(deleteResult);
+
+        // 6. 삭제 확인
+        assertThrows(NoSuchElementException.class, () -> {
+            boardService.get(createdNo);
+        });
     }
 }
