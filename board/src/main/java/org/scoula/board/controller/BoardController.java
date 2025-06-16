@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Log4j2
 @Controller
@@ -55,10 +56,14 @@ public class BoardController {
     }
 
     @PostMapping("/delete")
-    public String delete(@RequestParam("no") Long no) {
+    public String delete(@RequestParam("no") Long no, RedirectAttributes ra) {
         log.info("delete" + no);
+        boolean result = service.delete(no);
+        log.info("delete result:" + result);
 
-        service.delete(no);
+        if (result) {
+            ra.addFlashAttribute("message", "게시글이 삭제 되었습니다.");
+        }
 
         return "redirect:/board/list";
     }
