@@ -32,4 +32,4 @@
 <%@ include file="menu.jsp" %>
 
 <!-- 컨텐츠 컨테이너 시작 -->
-<div class="container my-5">
+<div class="container my-5"></div>
