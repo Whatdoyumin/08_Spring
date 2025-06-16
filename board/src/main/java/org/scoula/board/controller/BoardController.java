@@ -32,27 +32,44 @@ public class BoardController {
     }
 
     @PostMapping("/create")
-    public String create(BoardDTO board) {
-        log.info("create" + board);
+    public String create(BoardDTO board, RedirectAttributes ra) {
+        // RedirectAttributes : 리다이렉트 시 데이터를 전달하는 Spring MVC 인터페이스
 
-        service.create(board);
+        // RedirectAttributes.addFlashAttribute("K", V) : 리다이렉트 후 한 번만 사용되고 자동 삭제할 데이터 추가
+        // - 리다이렉트 전 -> request scope에 추가됨
+        // - 리다이렉트 중 -> Session scope에 임시 저장
+        // - 리다이렉트 후 -> request scope로 돌아옴
 
-        return "redirect:/board/list";
+        log.info("create: " + board);           // 입력 데이터 로그
+        service.create(board);                  // 게시글 생성
+
+        ra.addFlashAttribute("message", "게시글이 등록 되었습니다.");
+
+        //return "redirect:/board/list";          // 목록으로 리다이렉트
+        return "redirect:/board/get?no=" + board.getNo(); // 등록된 게시글 상세 조회 페이지로 리다이렉트
     }
 
     @GetMapping({"/get", "/update"})
     public void get(@RequestParam("no") Long no, Model model) {
         log.info("/get or update");
         model.addAttribute("board", service.get(no));
+
+        // URL에 따라 뷰 이름 결정: "board/get" 또는 "board/update"
     }
 
     @PostMapping("/update")
-    public String update(BoardDTO board) {
-        log.info("update" + board);
+    public String update(BoardDTO board, RedirectAttributes ra) {
+        log.info("update:" + board);
+        boolean result = service.update(board);                   // 게시글 수정
+        log.info("update result: " + result);
 
-        service.update(board);
+        if(result){
+            ra.addFlashAttribute("message", "게시글이 수정 되었습니다.");
+        }
 
-        return "redirect:/board/list";
+        //return "redirect:/board/list";
+
+        return "redirect:/board/get?no=" + board.getNo();
     }
 
     @PostMapping("/delete")
