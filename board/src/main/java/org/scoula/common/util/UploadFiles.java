@@ -54,12 +54,34 @@ public class UploadFiles {
                 .format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
+    /**
+     * 파일 다운로드 처리
+     * @param response HTTP 응답 객체
+     * @param file 다운로드할 파일
+     * @param orgName 원본 파일명 (다운로드 시 표시될 이름)
+     * @throws Exception
+     */
     public static void download(HttpServletResponse response, File file, String orgName) throws IOException {
-        // 헤더 설정
+        /* *** 응답 헤더 설정 *** */
+
+        // application/download
+        // - 범용 다운로드 타입을 나타내는 MIME TYPE
+        // - 브라우저가 미리보기를 시도하지 않고 다운로드 시도
         response.setContentType("application/download");
+
+
+        // Content-Length
+        // - 브라우저에게 전송될 데이터의 크기를 미리 알려주는 중요 응답 헤더
+        // - 다운로드 진행율 표시 가능, 연결 최적화(HTTP Keep-Alive), 브라우저 메모리 최적화
         response.setContentLength((int) file.length());
 
         String fileName = URLEncoder.encode(orgName, "UTF-8");  // 한글 파일명인 경우 인코딩 필수
+
+        // Content-disposition
+        // - 브라우저가 응답을 어떻게 처리하지 지정하는 HTTP 헤더
+
+        // attachment;filename="파일명"
+        // - 지정된 "파일명"으로 다운로드 처리를 지시
         response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
         // body 부분

@@ -88,6 +88,12 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
+    /**
+     * 파일 다운로드 처리
+     * @param no 첨부파일 번호
+     * @param response HTTP 응답 객체
+     * @throws Exception
+     */
     @GetMapping("/download/{no}")
     @ResponseBody
     public void download(@PathVariable("no") Long no, HttpServletResponse response) throws IOException {
