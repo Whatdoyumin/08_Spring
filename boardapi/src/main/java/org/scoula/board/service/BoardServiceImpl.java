@@ -47,7 +47,7 @@ public class BoardServiceImpl implements BoardService {
     // 게시글 등록 서비스
     @Transactional      // 여러 DB 작업을 하나의 트랜잭션으로 처리
     @Override
-    public void create(BoardDTO dto) {
+    public BoardDTO create(BoardDTO dto) {
         log.info("create........" + dto);
 
         // 1. 게시글 등록
@@ -60,20 +60,25 @@ public class BoardServiceImpl implements BoardService {
         if (files != null && !files.isEmpty()) {
             upload(vo.getNo(), files);  // 게시글 번호가 필요하므로 게시글 등록 후 처리
         }
+
+        return get(vo.getNo());
     }
 
     @Override
-    public boolean update(BoardDTO board) {
+    public BoardDTO update(BoardDTO board) {
         log.info("update........" + board);
+        boardMapper.update(board.toVo());
 
-        return boardMapper.update(board.toVo()) == 1;
+        return get(board.getNo());
     }
 
     @Override
-    public boolean delete(Long no) {
+    public BoardDTO delete(Long no) {
         log.info("delete........." + no);
+        BoardDTO board = get(no);
 
-        return boardMapper.delete(no) == 1;
+        boardMapper.delete(no);
+        return board;
     }
 
     // 파일 첨부 관련 메서드 추가
