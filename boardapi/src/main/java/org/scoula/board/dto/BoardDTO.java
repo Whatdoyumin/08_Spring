@@ -1,5 +1,7 @@
 package org.scoula.board.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,19 +18,32 @@ import java.util.List;
 @NoArgsConstructor       // 기본 생성자
 @AllArgsConstructor      // 모든 필드 생성자
 @Builder                 // 빌더 패턴
+@ApiModel(description = "게시글 DTO")
 public class BoardDTO {
+    @ApiModelProperty(value = "게시글 ID", example = "1")
     private Long no;           // 게시글 번호
+
+    @ApiModelProperty(value = "제목")
     private String title;      // 제목
+
+    @ApiModelProperty(value = "내용")
     private String content;    // 내용
+
+    @ApiModelProperty(value = "작성자")
     private String writer;     // 작성자
+
+    @ApiModelProperty(value = "등록일")
     private Date regDate;      // 등록일시
+
+    @ApiModelProperty(value = "수정일")
     private Date updateDate;   // 수정일시
 
-
-    // 첨부파일 정보
+    // 첨푸 파일 목록
+    @ApiModelProperty(value = "첨푸파일 목록")
     private List<BoardAttachmentVO> attaches;
 
     // 실제 업로드된 파일들 (form에서 전송됨)
+    @ApiModelProperty(value = "업로드 파일 목록")
     private List<MultipartFile> files = new ArrayList<>();
 
 
