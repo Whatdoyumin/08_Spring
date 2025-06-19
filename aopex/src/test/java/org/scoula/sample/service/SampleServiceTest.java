@@ -11,11 +11,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { RootConfig.class })
 @Log4j2
-class SampleServiceTest {
+public class SampleServiceTest {
     @Autowired
     private SampleService service;
+
     @Test
     public void doAdd() throws Exception {
         log.info(service.doAdd("123", "456"));
+    }
+
+    @Test
+    public void addError() throws Exception {
+        log.info(service.doAdd("123", "ABC"));
     }
 }
