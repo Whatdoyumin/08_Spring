@@ -2,6 +2,8 @@ package org.scoula.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,9 +21,10 @@ public class SecurityController {
         log.info("doAll can access everybody");
     }
 
-    @GetMapping("/member")  // MEMBER 또는 ADMIN 권한 필요
-    public void doMember(Principal principal) {
-        log.info("username = " + principal.getName());
+    @GetMapping("/member")
+    public void doMember(Authentication authentication) {
+        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
+        log.info("username = " + userDetails.getUsername());
     }
 
     @GetMapping("/admin")
