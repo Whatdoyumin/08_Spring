@@ -28,4 +28,9 @@ public class SecurityController {
     public void login() {
         log.info("login page");
     }
+
+    @GetMapping("/logout")
+    public void logout() {
+        log.info("logout page");
+    }
 }

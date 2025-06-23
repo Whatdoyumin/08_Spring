@@ -36,6 +36,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/security/login")
                 .loginProcessingUrl("/security/login")
                 .defaultSuccessUrl("/");
+
+        http.logout() // 로그아웃 설정 시작
+                .logoutUrl("/security/logout") // POST: 로그아웃 호출 url
+                .invalidateHttpSession(true) // 세션 invalidate
+                .deleteCookies("remember-me", "JSESSION-ID") // 삭제할 쿠키 목록
+                .logoutSuccessUrl("/security/logout"); // GET: 로그아웃 이후 이동할 페이지
     }
 
     @Override
