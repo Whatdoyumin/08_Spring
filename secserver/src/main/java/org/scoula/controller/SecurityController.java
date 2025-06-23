@@ -1,8 +1,11 @@
 package org.scoula.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.scoula.security.account.domain.CustomUser;
+import org.scoula.security.account.domain.MemberVO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,8 +31,9 @@ public class SecurityController {
     }
 
     @GetMapping("/admin")
-    public void doAdmin() {
-        log.info("admin only");
+    public void doAdmin(@AuthenticationPrincipal CustomUser customUser) {
+        MemberVO member = customUser.getMember();
+        log.info("username = " + member);
     }
 
     @GetMapping("/login")
