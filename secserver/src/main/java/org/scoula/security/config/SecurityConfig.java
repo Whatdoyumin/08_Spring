@@ -1,11 +1,14 @@
 package org.scoula.security.config;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -13,6 +16,11 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @EnableWebSecurity
 @Log4j2
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     // 문자셋 필터
     public CharacterEncodingFilter encodingFilter() {
         CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
@@ -50,11 +58,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         log.info("configure .........................................");
         auth.inMemoryAuthentication()
                 .withUser("admin")
-                .password("{noop}1234")
+                // .password("{noop}1234")
+                .password("$2a$10$F6GcsBmLf/MdayNsJ/jAAuMugZajjOUHimxjZHh32pZGfwxCsZfBS")
                 .roles("ADMIN","MEMBER"); // ROLE_ADMIN
         auth.inMemoryAuthentication()
                 .withUser("member")
-                .password("{noop}1234")
+                // .password("{noop}1234")
+                .password("$2a$10$F6GcsBmLf/MdayNsJ/jAAuMugZajjOUHimxjZHh32pZGfwxCsZfBS")
                 .roles("MEMBER"); // ROLE_MEMBER
     }
 }
