@@ -23,4 +23,9 @@ public class SecurityController {
     public void doAdmin() {
         log.info("admin only");
     }
+
+    @GetMapping("/login")
+    public void login() {
+        log.info("login page");
+    }
 }
