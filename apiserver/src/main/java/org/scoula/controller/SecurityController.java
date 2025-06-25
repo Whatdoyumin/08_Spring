@@ -3,47 +3,45 @@ package org.scoula.controller;
 import lombok.extern.log4j.Log4j2;
 import org.scoula.security.account.domain.CustomUser;
 import org.scoula.security.account.domain.MemberVO;
-import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.security.Principal;
+import org.springframework.web.bind.annotation.RestController;
 
 @Log4j2
-@RequestMapping("/security")
-@Controller
+@RequestMapping("/api/security")
+@RestController
 public class SecurityController {
-    @GetMapping("/all")     // 모두 접근 가능
-    public void doAll() {
-        log.info("doAll can access everybody");
-    }
 
-    @GetMapping("/member")
-    public void doMember(Authentication authentication) {
-        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
-        log.info("username = " + userDetails.getUsername());
-    }
+  @GetMapping("/all")     // 모두 접근 가능
+  public void doAll() {
+    log.info("doAll can access everybody");
+  }
 
-    @GetMapping("/admin")
-    public void doAdmin(@AuthenticationPrincipal CustomUser customUser) {
-        MemberVO member = customUser.getMember();
-        log.info("username = " + member);
-    }
+  @GetMapping("/member")
+  public void doMember(Authentication authentication) {
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    log.info("username = " + userDetails.getUsername());
+  }
 
-    @GetMapping("/login")
-    public void login() {
-        log.info("login page");
-    }
+  @GetMapping("/admin")
+  public ResponseEntity<MemberVO> doAdmin(@AuthenticationPrincipal CustomUser customUser) {
+    MemberVO member = customUser.getMember();
+    log.info("username = " + member);
+    return ResponseEntity.ok(member);
+  }
 
-    @GetMapping("/logout")
-    public void logout() {
-        log.info("logout page");
-    }
+  @GetMapping("/login")
+  public void login() {
+    log.info("login page");
+  }
+
+  @GetMapping("/logout")
+  public void logout() {
+    log.info("logout page");
+  }
 
 }
