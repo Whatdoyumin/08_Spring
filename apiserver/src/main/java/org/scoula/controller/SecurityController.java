@@ -16,15 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SecurityController {
 
-  @GetMapping("/all")     // 모두 접근 가능
-  public void doAll() {
-    log.info("doAll can access everybody");
+  @GetMapping("/all") //  /api/security/all
+  public ResponseEntity<String> doAll() {
+    log.info("do all can access everybody");
+    return ResponseEntity.ok("All can access everybody");
   }
 
-  @GetMapping("/member")
-  public void doMember(Authentication authentication) {
+  @GetMapping("/member") // /api/security/member
+  public ResponseEntity<String> doMember(Authentication authentication) {
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
     log.info("username = " + userDetails.getUsername());
+    return ResponseEntity.ok(userDetails.getUsername());
   }
 
   @GetMapping("/admin")

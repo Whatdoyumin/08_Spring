@@ -21,10 +21,13 @@ public class AuthenticationErrorFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
     try {
+      // 다음 필터 실행
       super.doFilter(request, response, filterChain);
     } catch (ExpiredJwtException e) {
+      // 토큰 만료 시 401 응답
       JsonResponse.sendError(response, HttpStatus.UNAUTHORIZED, "토큰의 유효시간이 지났습니다.");
     } catch (UnsupportedJwtException | MalformedJwtException | SignatureException e) {
+      // 기타 토큰 오류 시 401 응답
       JsonResponse.sendError(response, HttpStatus.UNAUTHORIZED, e.getMessage());
     } catch (ServletException e) {
       JsonResponse.sendError(response, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

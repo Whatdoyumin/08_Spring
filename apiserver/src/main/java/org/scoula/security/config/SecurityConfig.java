@@ -38,6 +38,7 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+  // 필드 추가
   private final UserDetailsService userDetailsService;    // 생성자 주입
   private final JwtAuthenticationFilter jwtAuthenticationFilter; // 생성자 주입
   private final AuthenticationErrorFilter authenticationErrorFilter;
@@ -87,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Override
-  public void configure(HttpSecurity http) throws Exception {
+  public void configure(HttpSecurity http) throws Exception { // 여러 개를 똑같은 필터 앞으로 선언하면 선언 순서대로 적용
     // 한글 인코딩 필터 설정
     http.addFilterBefore(encodingFilter(), CsrfFilter.class)
         // 인증 에러 필터
